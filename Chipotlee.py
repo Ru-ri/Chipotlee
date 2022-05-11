@@ -1,33 +1,13 @@
 import os
+import json
 
 #order dictionaries. They are assigned as ingreditent:upcharge
-main_ingredients = {
-    "Ground Beef" : 0,
-    "Carne asada" : 1.00,
-    "Carne adovada" : 1.00,
-    "Scrambled eggs" : 0,
-    "Chicken" : 0,
-    "Sofritas" : 0
-}
+#dictionaries are defined externally with their respective files
+main_ingredients = json.load(open('main_ingredients.json'))
+starch_ingredients = json.load(open('starch_ingredients.json'))
+filling_ingredients = json.load(open('filling_ingredients.json'))
 
-starch_ingredients = {
-    "Rice": 0.25,
-    "Cilantro rice" : 0.25,
-    "Beans" : 0,
-    "No beans" : 0
-}
 
-filling_ingredients = {
-    "Extra beans" : 0.50,
-    "Chorizo" : 1.00,
-    "Onion" : 0,
-    "Peppers" : 0,
-    "Salsa" : 0,
-    "Green chile salsa" : 0.25,
-    "Cheese" : 0,
-    "Extra cheese" : 0.50,
-    "Potatoes" : 1.00
-}
 def list_ingredients(ingredient):
     loop_num = 1
     for x in ingredient:
@@ -59,6 +39,7 @@ def get_total(base_price, current_order):
 def main_order():
     clear = lambda: os.system('clear')
     starting_cost = 5.00
+    print("Welcome to Chipotlee, the only Bruce Lee-themed burrito emporium!")
     customer_name = input("What is the name you'd like for the order to be under?: ")
     ingredients_order = []
     total_cost = 5.00
@@ -68,30 +49,30 @@ def main_order():
     
     while(loop_check):
         try:
-            print(customer_name,"'s order: ", "${:.2f}".format(get_total(starting_cost, ingredients_order)), ingredients_order)
+            print(customer_name,"'s order: ", "${:.2f}".format(get_total(starting_cost, ingredients_order)), str(ingredients_order).replace("'", ""))
             print("Please select your main ingredient.")
             list_ingredients(main_ingredients)
             ingredients_order.append(select_item(main_ingredients, input()))
             loop_check = False
         except:
-            input("Invalid selection. Please try again")
+            input("Invalid selection. Please press 'Enter' to try again.")
         clear()
 
     loop_check = True
     while(loop_check):
         try:
-            print(customer_name,"'s order: ", "${:.2f}".format(get_total(starting_cost, ingredients_order)), ingredients_order)
+            print(customer_name,"'s order: ", "${:.2f}".format(get_total(starting_cost, ingredients_order)), str(ingredients_order).replace("'", ""))
             print("Please select your starch ingredients.")
             list_ingredients(starch_ingredients)
             ingredients_order.append(select_item(starch_ingredients, input()))
             loop_check = False
         except:
-            input("Invalid selection. Please try again")
+            input("Invalid selection. Please press 'Enter' to try again.")
         clear()
 
     loop_variable = ""
     while loop_variable != "exit":
-        print(customer_name,"'s order: ", "${:.2f}".format(get_total(starting_cost, ingredients_order)), ingredients_order)
+        print(customer_name,"'s order: ", "${:.2f}".format(get_total(starting_cost, ingredients_order)), str(ingredients_order).replace("'", ""))
         print("Please select your filling ingredients. Type \"exit\" when done.")
         list_ingredients(filling_ingredients)
         loop_variable = input()
@@ -100,11 +81,13 @@ def main_order():
                 ingredients_order.append(select_item(filling_ingredients, loop_variable))
                 loop_check = False
             except:
-                input("Invalid selection. Please try again")
+                input("Invalid selection. Please press 'Enter' to try again.")
         clear()
 
     #total
-    print("Your burrito build: ", ingredients_order)
+    print("Your burrito build: ", str(ingredients_order).replace("'", ""))
     print("Your total for this order is:", "${:.2f}".format(get_total(starting_cost, ingredients_order)))
+    print("Thank you for ordering from Chipotlee!")
+
 
 main_order()
